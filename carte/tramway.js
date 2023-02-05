@@ -111,7 +111,7 @@ var baseLayer = new ol.layer.Tile({
 
 var tramwayStationBuffer1km = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: '/geojson/tramway/tramway-station-buffer-1km.json',
+    url: 'https://sequelfirst.com/geojson/tramway/tramway-station-buffer-1km.json',
     format: new ol.format.GeoJSON() 
   }),
   style: new ol.style.Style({
