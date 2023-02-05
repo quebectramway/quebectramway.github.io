@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tramway de Québec">
+  <meta name="author" content="Frederic Morin">
+  <meta name="keywords" content="Tramway de Québec">
+  <meta property="og:title" content="Tramway de Québec">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://quebectramway.com/carte/preview.png">
+  <meta property="og:url" content="https://quebectramway.com/carte">
+  <title>Quebec Tramway - Carte</title>
+  <link rel="canonical" href="https://quebectramway.com/carte">
+  <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/elm-pep@1.0.6/dist/elm-pep.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HFV2MJVXPD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-HFV2MJVXPD');
+  </script>
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+
+
+  <link href="/qt.css" rel="stylesheet">
+  <link href="tramway.css" rel="stylesheet">
+</head>
+
+<body class="d-flex text-left text-bg-dark">
+
+  <div class="qt-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+      <div>
+        <h3 class="float-md-start mb-0">Quebec Tramway</h3>
+        <nav class="nav nav-masthead justify-content-left float-md-end">
+          <a class="nav-link fw-bold py-1 px-0 " href="/">Accueil</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="px-3">
+      <h2>Carte</h2>
+      <p>La carte suivante présente le trajet à l'étude du tramway.</p>
+      <ul>
+        <li>Cliquez les stations
+          <div style="background:#ff8050; border-radius:50%; width:10px; height:10px; display:inline-block;"></div>
+          et pôles d'échanges <div
+            style="background:#ff5003; border-radius:50%; width:15px; height:15px; display:inline-block;"></div> pour
+          avoir plus d'information.
+        </li>
+        <li>La densité de population est représentée par un dégradé de bleu.
+          <button type="button" class="btn btn btn-link link-light btn-sm" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Légende
+          </button>
+        </li>
+      </ul>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Densité de population</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-bg-light">
+              <div>
+                <div style="width:15px; height:15px; background:#c1e7ff;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;10 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#abd2ec;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;100 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#94bed9;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;500 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#7faac6;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;1000 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#6996b3;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;2500 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#5383a1;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;5000 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#3d708f;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;17500 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#255e7e;display:inline-block;"></div>
+                <div style="display:inline-block;">
+                  &lt;10000 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#004c6d;display:inline-block;">
+                </div>
+                <div style="display:inline-block;">
+                  &lt;20000 habitants par km2</div>
+              </div>
+              <div>
+                <div style="width:15px; height:15px; background:#00354d;display:inline-block;">
+                </div>
+                <div style="display:inline-block;">>20000 habitants par km2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="map" class="w-100 p-3 mx-auto-float-md-end" style="height: 600px;"></div>
+      <div style="display: none;">
+        <div id="popup" class="popup"></div>
+      </div>
+   
+      <h2>Statistiques</h2>
+      <p>Quel pourcentage de la population bénéficie directement du projet? Afin de le déterminer, nous avons calculé le nombre de citoyens qui habitent à proximité d'une station.</p>
+      <p>Les distances les plus utilisés dans le domaine de la planification de réseau de transport en commun sont:
+      <ul>
+        <li>400 mètres: environ 5 minutes de marche. (1/4 de mille)</li>
+        <li>800 mètres: environ 10 minutes de marche. (1/2 de mille)</li>
+        <li>1 kilomètre: aussi la distance proposée par la ville de Québec pour une redevance sur les nouvelles constructions.</li>
+      </ul>
+      <p>Le portrait statistique des arrondissements et des quartiers n'est pas à jour sur le <a class="link-light" href="https://www.ville.quebec.qc.ca/apropos/portrait/quelques_chiffres/index.aspx">site de la ville</a>. Nous avons calculé ces statistiques à partir des données de Recensement Canada et les données de limites des arrondissements et quartiers de la ville.</p>
+      <p>Le tableau suivant présente les chiffres pour la ville, les arrondissements et les
+        quartiers:</p>
+      <p></p>
+      <div class="table-responsive">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Population</th>
+              <th>400m</th>
+              <th>800m</th>
+              <th>1km</th>
+            </tr>
+          </thead>
+          <thead>
+            <tr>
+              <th colspan="5">Ville</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Québec</td>
+              <td>549 459</td>
+              <td>76 076 (14%)</td>
+              <td>128 184 (23%)</td>
+              <td>156 350 (28%)</td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="5">Arrondissements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cité-Limoilou</td>
+              <td>108 339</td>
+              <td>49 394 (46%)</td>
+              <td>73 378 (68%)</td>
+              <td>81 926 (76%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge</td>
+              <td>111 322</td>
+              <td>24 589 (22%)</td>
+              <td>49 909 (45%)</td>
+              <td>67 708 (61%)</td>
+            </tr>
+            <tr>
+              <td>Beauport</td>
+              <td>81 478</td>
+              <td>2 093 (3%)</td>
+              <td>4 656 (6%)</td>
+              <td>6 314 (8%)</td>
+            </tr>
+            <tr>
+              <td>Les Rivières</td>
+              <td>76 993</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>161 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg</td>
+              <td>82 873</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles</td>
+              <td>88 454</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="5">Quartiers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cité-Limoilou / Montcalm</td>
+              <td>13 724</td>
+              <td>12 026 (88%)</td>
+              <td>13 724 (100%)</td>
+              <td>13 724 (100%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Maizerets</td>
+              <td>14 936</td>
+              <td>8 360 (56%)</td>
+              <td>10 794 (72%)</td>
+              <td>12 217 (82%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Vieux-Limoilou</td>
+              <td>14 000</td>
+              <td>7 846 (56%)</td>
+              <td>10 5846 (76%)</td>
+              <td>11 560 (83%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Saint-Jean-Baptiste</td>
+              <td>8 723</td>
+              <td>7 636 (88%)</td>
+              <td>8 723 (100%)</td>
+              <td>8 723 (100%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Saint-Roch</td>
+              <td>8 381</td>
+              <td>6 252 (76%)</td>
+              <td>8 381 (100%)</td>
+              <td>8 381 (100%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Saint-Sacrement</td>
+              <td>10 950</td>
+              <td>5 709 (56%)</td>
+              <td>10 111 (92%)</td>
+              <td>10 804 (99%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Vieux-Québec Cap-Blanc Colline Parlementaire</td>
+              <td>5 923</td>
+              <td>1 565 (26%)</td>
+              <td>4 509 (76%)</td>
+              <td>5 409 (91%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Saint-Sauveur</td>
+              <td>16 075</td>
+              <td>0 (0%)</td>
+              <td>5 650 (35%)</td>
+              <td>9 426 (59%)</td>
+            </tr>
+            <tr>
+              <td>Cité-Limoilou / Lairet</td>
+              <td>15 598</td>
+              <td>0 (0%)</td>
+              <td>873 (6%)</td>
+              <td>1 653 (11%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Pointe-de-Sainte-Foy</td>
+              <td>14 839</td>
+              <td>6 078 (41%)</td>
+              <td>12 268 (78%)</td>
+              <td>14 612 (98%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Cité-Universitaire</td>
+              <td>20 559</td>
+              <td>5 154 (25%)</td>
+              <td>8 139 (40%)</td>
+              <td>11 437 (56%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Saint-Louis</td>
+              <td>15 898</td>
+              <td>4 781 (30%)</td>
+              <td>9 449 (59%)</td>
+              <td>12 277 (77%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Sillery</td>
+              <td>14 618</td>
+              <td>4 589 (31%)</td>
+              <td>9 153 (63%)</td>
+              <td>12 227 (84%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Plateau</td>
+              <td>14 741</td>
+              <td>3 609 (24%)</td>
+              <td>8 495 (58%)</td>
+              <td>10 817 (73%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Cap-Rouge</td>
+              <td>17 285</td>
+              <td>378 (0%)</td>
+              <td>2 405 (14%)</td>
+              <td>4 697 (27%)</td>
+            </tr>
+            <tr>
+              <td>Sainte-Foy–Sillery–Cap-Rouge / Aéroport</td>
+              <td>13 382</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>1 641 (12%)</td>
+            </tr>
+            <tr>
+              <td>Beauport / Vieux-Moulin</td>
+              <td>15 212</td>
+              <td>2 093 (14%)</td>
+              <td>4 656 (31%)</td>
+              <td>6 314 (42%)</td>
+            </tr>
+            <tr>
+              <td>Beauuport / Saint-Michel</td>
+              <td>17 668</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Beauuport / Laurentides</td>
+              <td>17 169</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Beauport / Chutes-Montmorency</td>
+              <td>16 280</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Beauport / Vieux-Bourg</td>
+              <td>15 149</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+
+
+            <tr>
+              <td>Les Rivières / Vanier</td>
+              <td>13 494</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>161 (0%)</td>
+            </tr>
+            <tr>
+              <td>Les Rivières / Neufchatel Est—Lebourgneuf</td>
+              <td>37 524</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+
+            <tr>
+              <td>Les Rivières / Duberger—Les Saules</td>
+              <td>27 464</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+
+
+
+            <tr>
+              <td>Charlesbourg / Jésuites</td>
+              <td>15 792</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg / Orsainville</td>
+              <td>15 767</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg / Notre-Dame-des-Laurentides</td>
+              <td>15 310</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg / Bourg-Royal</td>
+              <td>14 326</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg / Trait-Carré</td>
+              <td>9 660</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Charlesbourg / Saint-Rodrigue</td>
+              <td>12 018</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles / Loretteville</td>
+              <td>15 643</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles / Des Châtels</td>
+              <td>13 701</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles / Lac-Saint-Charles</td>
+              <td>9 985</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles / Saint-Émile</td>
+              <td>16 533</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+            <tr>
+              <td>Haute-Saint-Charles / Val-Bélair</td>
+              <td>31 103</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+              <td>0 (0%)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2>Plus d'information</h2>
+      <p>Pour plus d'information, contactez moi!</p>
+
+    </main>
+
+    <footer class="mt-auto text-white-50">
+      <p>Quebec Tramway © by Fred Morin
+        <a href="https://twitter.com/quekqc"><img width="32" height="32" src="/assets/twitter.svg"></a>.
+        <a href="https://www.linkedin.com/in/fr%C3%A9d%C3%A9ric-morin-0a97a868"><img width="32" height="32"
+            src="/assets/linkedin.svg"></a>
+        <a href="https://github.com/fredmorin"><img width="32" height="32" src="/assets/github.svg"></a>
+      </p>
+
+
+
+
+    </footer>
+  </div>
+  <script src="tramway.js"></script>
+</body>
+
+</html>
