@@ -60,16 +60,26 @@ function styleFunction(feature, resolution) {
     var val = feature.get('density2021');
     tenth = 0;
 
-  if(val <= 1000)
-    tenth =  0;
-  else if(val <= 3000)
+ if(val <= 10)
+    tenth = 0
+  else if(val <= 100)
+    tenth = 0;
+  else if(val <= 500)
+    tenth =  1;
+  else if(val <= 1000)
     tenth =  4;
+  else if(val <= 2500)
+    tenth =  5;
   else if(val <= 5000)
     tenth =  6;
+  else if(val <= 7500)
+    tenth =  7;
   else if(val <= 10000)
     tenth =  8;
-  else if(val > 10000)
+  else if(val <= 20000)
     tenth =  9;
+  else if(val > 20000)
+    tenth =  10;
 
 
     if(!styleCache[tenth]) {
